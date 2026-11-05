@@ -1,0 +1,2306 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pontoon & Docks - App Screens</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- P&D DESIGN SYSTEM TOKENS (BORDERLESS TONAL DARK) -->
+  <style>
+    /* Card surfaces - pure tonal contrast, no harsh borders */
+    .pd-card {
+      background-color: #18181b; /* zinc-900 */
+      border-radius: 0.75rem;     /* 12px */
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+    }
+    .pd-card-sub {
+      background-color: #09090b; /* zinc-950 */
+      border-radius: 0.5rem;      /* 8px */
+    }
+
+    /* Icon button & badge standard */
+    .pd-icon-badge {
+      background-color: #27272a; /* zinc-800 */
+      color: #e4e4e7;            /* zinc-200 */
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Standard inputs - clean borderless with tonal depth */
+    .pd-input {
+      background-color: #09090b; /* zinc-950 */
+      color: #f4f4f5;            /* zinc-100 */
+      border: 1px solid transparent;
+      border-radius: 0.375rem;    /* 6px */
+      height: 2.25rem;           /* 36px / h-9 */
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+      font-size: 0.75rem;        /* 12px */
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .pd-input:focus {
+      background-color: #121215;
+      border-color: #3f3f46;     /* subtle zinc-700 on focus only */
+      outline: none;
+    }
+    .pd-input::placeholder {
+      color: #71717a;            /* zinc-500 */
+    }
+
+    /* Standard ghost icon button */
+    .pd-btn-ghost {
+      background-color: #18181b;
+      color: #a1a1aa;
+      border-radius: 0.375rem;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .pd-btn-ghost:hover {
+      background-color: #27272a;
+      color: #f4f4f5;
+    }
+
+    /* Standard radio chips */
+    .pd-chip-label {
+      background-color: #09090b;
+      color: #a1a1aa;
+      border-radius: 0.375rem;
+      padding: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pd-chip-label:hover {
+      background-color: #121215;
+      color: #e4e4e7;
+    }
+    .pd-chip-input:checked + .pd-chip-label,
+    label:has(.pd-chip-input:checked) {
+      background-color: #f4f4f5;
+      color: #09090b;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col font-sans antialiased selection:bg-zinc-800 selection:text-white">
+
+  <!-- TOP BANNER (SHADCN DARK HEADER) -->
+  <header class="bg-zinc-900/80 backdrop-blur-md px-6 py-3 flex justify-between items-center sticky top-0 z-30 shadow-xs">
+    <div onclick="switchView('home')" class="flex items-center gap-2.5 cursor-pointer select-none group" title="Return to Home">
+      <div class="w-7 h-7 rounded-md bg-white text-zinc-950 flex items-center justify-center font-bold text-xs tracking-tight shadow-xs group-hover:bg-zinc-200 transition-colors">
+        P&D
+      </div>
+      <div>
+        <h1 class="text-xs font-semibold text-zinc-100 leading-none tracking-tight group-hover:text-zinc-300 transition-colors">Pontoon &amp; Docks Operations</h1>
+        
+      </div>
+    </div>
+
+    <!-- TOP ACTIONS -->
+    <div class="flex items-center gap-2">
+      <!-- DEMO QUICK FILLS (SHOWN ONLY ON NEW JOB INTAKE SCREEN) -->
+      <div id="header-demo-buttons" class="hidden flex items-center gap-1.5 pr-3 mr-1">
+        <span class="text-[11px] text-zinc-400  font-medium">Demo:</span>
+        <button onclick="populateFakeData('hire')" class="text-xs px-2.5 py-1 rounded-md bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors cursor-pointer" title="Fill Hire demo">Hire</button>
+        <button onclick="populateFakeData('sale')" class="text-xs px-2.5 py-1 rounded-md bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors cursor-pointer" title="Fill Sale demo">Sale</button>
+        <button onclick="populateFakeData('training')" class="text-xs px-2.5 py-1 rounded-md bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors cursor-pointer" title="Fill Training demo">Training</button>
+        <button onclick="clearForm()" class="text-xs text-zinc-400 hover:text-zinc-200  px-1.5 py-1 rounded-md hover:bg-zinc-800 transition-colors">Clear</button>
+      </div>
+
+      <!-- TOGGLE DATABASE SCHEMA BUTTON -->
+      <button 
+        onclick="toggleSchemaPanel()" 
+        id="schemaToggleBtn"
+        class="text-xs font-medium px-3 py-1.5 rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+      >
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+        <span id="schemaBtnText">Schema</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER (FORM + HIDEABLE SCHEMA PANEL) -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- WIREFRAME VIEW -->
+    <main class="flex-1 flex justify-center items-start p-8 md:p-12 overflow-y-auto">
+
+      <!-- VIEW 0: HOME / MAIN SCREEN (DEFAULT ON ROOT) -->
+      <!-- VIEW 0: HOME / MAIN SCREEN (DEFAULT ON ROOT) -->
+      <div id="view-home" class="max-w-md w-full my-auto transition-all">
+        <h2 class="text-base font-bold tracking-tight text-zinc-100 text-center mb-6">
+          Pontoon &amp; Dock Operations
+        </h2>
+
+        <!-- 4 ACTION CARDS (ROOT NAVIGATION) -->
+        <div class="grid grid-cols-2 gap-3.5">
+          
+          <!-- CARD 1: NEW JOB -->
+          <button 
+            onclick="switchView('intake')" 
+            class="bg-zinc-900 hover:bg-zinc-800/80 rounded-xl p-5 shadow-xs transition-all cursor-pointer flex flex-col items-center justify-center text-center gap-2.5 group"
+          >
+            <div class="w-10 h-10 rounded-lg bg-zinc-800 text-zinc-200 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <i data-lucide="plus" class="w-5 h-5 text-zinc-200"></i>
+            </div>
+            <span class="text-xs font-semibold tracking-tight text-zinc-100">
+              New Job
+            </span>
+          </button>
+
+          <!-- CARD 2: ALL JOBS -->
+          <button 
+            onclick="switchView('jobs')" 
+            class="bg-zinc-900 hover:bg-zinc-800/80 rounded-xl p-5 shadow-xs transition-all cursor-pointer flex flex-col items-center justify-center text-center gap-2.5 group"
+          >
+            <div class="w-10 h-10 rounded-lg bg-zinc-800 text-zinc-200 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <i data-lucide="folder-kanban" class="w-5 h-5 text-zinc-200"></i>
+            </div>
+            <span class="text-xs font-semibold tracking-tight text-zinc-100">
+              All Jobs
+            </span>
+          </button>
+
+          <!-- CARD 3: QUOTE BUILDER -->
+          <button 
+            onclick="switchView('quote')" 
+            class="bg-zinc-900 hover:bg-zinc-800/80 rounded-xl p-5 shadow-xs transition-all cursor-pointer flex flex-col items-center justify-center text-center gap-2.5 group"
+          >
+            <div class="w-10 h-10 rounded-lg bg-zinc-800 text-zinc-200 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <i data-lucide="calculator" class="w-5 h-5 text-zinc-200"></i>
+            </div>
+            <span class="text-xs font-semibold tracking-tight text-zinc-100">
+              Quote Builder
+            </span>
+          </button>
+
+          <!-- CARD 4: RESOURCES -->
+          <button 
+            onclick="switchView('resources')" 
+            class="bg-zinc-900 hover:bg-zinc-800/80 rounded-xl p-5 shadow-xs transition-all cursor-pointer flex flex-col items-center justify-center text-center gap-2.5 group"
+          >
+            <div class="w-10 h-10 rounded-lg bg-zinc-800 text-zinc-200 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <i data-lucide="boxes" class="w-5 h-5 text-zinc-200"></i>
+            </div>
+            <span class="text-xs font-semibold tracking-tight text-zinc-100">
+              Resources
+            </span>
+          </button>
+
+        </div>
+      </div>
+      
+      <!-- VIEW 1: INBOUND INTAKE (DUAL CARD) -->
+      <div id="view-intake" class="hidden flex-col items-center gap-4 max-w-4xl w-full my-auto transition-all">
+        <!-- TOP BREADCRUMB / BACK & HOME (ICON ONLY) -->
+        <div class="w-full flex items-center justify-start gap-1.5">
+          <button 
+            onclick="goBack()" 
+            class="w-8 h-8 pd-btn-ghost flex items-center justify-center shadow-xs"
+            title="Back"
+            aria-label="Back"
+          >
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          </button>
+          <button 
+            onclick="switchView('home')" 
+            class="w-8 h-8 pd-btn-ghost flex items-center justify-center shadow-xs"
+            title="Home"
+            aria-label="Home"
+          >
+            <i data-lucide="home" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="flex flex-col lg:flex-row items-start gap-6 w-full justify-center">
+
+        <!-- CARD 1: CALLER INTAKE -->
+        <div class="w-full lg:w-[380px] pd-card p-6 space-y-4 flex-shrink-0">
+          <div class="pb-3">
+            <h2 class="text-sm font-semibold tracking-tight text-zinc-100">New Inbound Job</h2>
+          </div>
+
+          <!-- ENQUIRY SOURCE SELECT -->
+          <div>
+            <label class="block text-[11px] font-medium text-zinc-400 mb-1">Enquiry Source</label>
+            <select id="input-source" class="pd-input w-full">
+              <option value="phone" selected>Phone</option>
+              <option value="email">Email</option>
+              <option value="web">Web</option>
+              <option value="ads">Ads</option>
+              <option value="social">Social</option>
+              <option value="event">Event</option>
+              <option value="referral">Referral</option>
+            </select>
+          </div>
+
+          <!-- CALLER DETAILS -->
+          <div class="space-y-3 pt-1">
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Contact Name</label>
+              <input type="text" id="input-name" class="pd-input w-full" />
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Company</label>
+              <input type="text" id="input-company" placeholder="(Companies House search)" class="pd-input w-full" />
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Phone</label>
+              <input type="tel" id="input-phone" class="pd-input w-full" />
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Email</label>
+              <input type="email" id="input-email" class="pd-input w-full" />
+            </div>
+          </div>
+
+          <!-- ENQUIRY TYPE TOGGLE -->
+          <div class="pt-2">
+            <label class="block text-[11px] font-medium text-zinc-400 mb-1.5">Enquiry Type</label>
+            <div class="grid grid-cols-3 gap-2">
+              <label class="pd-chip-label">
+                <input type="radio" name="type" id="type-hire" value="hire" onchange="toggleConditionalSections()" class="pd-chip-input hidden" /> Hire
+              </label>
+              <label class="pd-chip-label">
+                <input type="radio" name="type" id="type-sale" value="sale" onchange="toggleConditionalSections()" class="pd-chip-input hidden" /> Sale
+              </label>
+              <label class="pd-chip-label">
+                <input type="radio" name="type" id="type-training" value="training" onchange="toggleConditionalSections()" class="pd-chip-input hidden" /> Training
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: SCOPING FORM (CONDITIONAL ON ENQUIRY TYPE) -->
+        <div id="section-requirements-card" class="hidden w-full lg:w-[420px] pd-card p-6 space-y-4 flex-shrink-0 transition-all">
+          <div class="pb-3 flex items-center justify-between">
+            <h3 class="text-sm font-semibold tracking-tight text-zinc-100">Scoping Form</h3>
+            <span id="badge-enquiry-type" class="text-[11px]  uppercase font-semibold bg-zinc-800 text-zinc-200 px-2 py-0.5 rounded">Hire</span>
+          </div>
+
+          <!-- ============================================== -->
+          <!-- HIRE REQUIREMENTS BLOCK                        -->
+          <!-- ============================================== -->
+          <div id="section-hire" class="space-y-3.5">
+            <!-- 1. LOCATION -->
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Location</label>
+              <input 
+                type="text" 
+                id="input-location"
+                class="pd-input w-full" 
+              />
+            </div>
+
+            <!-- 2. WATER ENVIRONMENT -->
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Water Environment</label>
+              <div class="grid grid-cols-2 gap-2">
+                <label class="pd-chip-label">
+                  <input type="radio" name="water_type_hire" id="water-still" value="still" checked class="pd-chip-input hidden" /> Still Water
+                </label>
+                <label class="pd-chip-label">
+                  <input type="radio" name="water_type_hire" id="water-tidal" value="tidal" class="pd-chip-input hidden" /> Tidal / Flowing
+                </label>
+              </div>
+            </div>
+
+            <!-- 3. APPROX AREA (NUMERIC M2) -->
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Approx. Area (m²)</label>
+              <div class="relative">
+                <input 
+                  type="number" 
+                  min="1" 
+                  step="1" 
+                  id="input-size" 
+                  class="pd-input w-full pr-10" 
+                />
+                <span class="absolute right-3 top-2 text-xs  text-zinc-500">m²</span>
+              </div>
+            </div>
+
+            <!-- 4. TARGET START DATE -->
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Date</label>
+              <input type="date" id="input-date" class="pd-input w-full" />
+            </div>
+
+            <!-- 5. ESTIMATED DURATION -->
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Estimated Duration</label>
+              <div class="flex gap-2">
+                <input type="number" min="1" id="input-duration-val" class="pd-input w-24 text-center" />
+                <select id="input-duration-unit" class="pd-input flex-1">
+                  <option selected>Weeks</option>
+                  <option>Days</option>
+                  <option>Months</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================== -->
+          <!-- SALE REQUIREMENTS BLOCK                        -->
+          <!-- ============================================== -->
+          <div id="section-sale" class="hidden space-y-3.5">
+            <!-- 1. DELIVERY LOCATION -->
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Location</label>
+              <input 
+                type="text" 
+                id="input-sale-location"
+                class="pd-input w-full" 
+              />
+            </div>
+
+            <!-- 2. INSTALLATION SCOPE TOGGLE -->
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Installation Scope</label>
+              <div class="grid grid-cols-2 gap-2">
+                <label class="pd-chip-label">
+                  <input type="radio" name="sale_install" id="install-no" value="supply_only" checked onchange="toggleSaleInstall()" class="pd-chip-input hidden" /> Supply Only
+                </label>
+                <label class="pd-chip-label">
+                  <input type="radio" name="sale_install" id="install-yes" value="supply_install" onchange="toggleSaleInstall()" class="pd-chip-input hidden" /> Supply &amp; Install
+                </label>
+              </div>
+            </div>
+
+            <!-- 3. WATER ENVIRONMENT (CONDITIONAL: ONLY IF SUPPLY & INSTALL) -->
+            <div id="sale-water-group" class="hidden">
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Water Environment</label>
+              <div class="grid grid-cols-2 gap-2">
+                <label class="pd-chip-label">
+                  <input type="radio" name="water_type_sale" id="water-sale-still" value="still" checked class="pd-chip-input hidden" /> Still Water
+                </label>
+                <label class="pd-chip-label">
+                  <input type="radio" name="water_type_sale" id="water-sale-tidal" value="tidal" class="pd-chip-input hidden" /> Tidal / Flowing
+                </label>
+              </div>
+            </div>
+
+            <!-- 4. APPROX AREA (NUMERIC M2) -->
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Approx. Area (m²)</label>
+              <div class="relative">
+                <input 
+                  type="number" 
+                  min="1" 
+                  step="1" 
+                  id="input-sale-size" 
+                  class="pd-input w-full pr-10" 
+                />
+                <span class="absolute right-3 top-2.5 text-xs text-zinc-500">m²</span>
+              </div>
+            </div>
+
+            <!-- 5. DATE (OPTIONAL) -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="block text-[11px] font-medium text-zinc-400">Date</label>
+                <span class="text-[10px] text-zinc-500">Optional</span>
+              </div>
+              <input type="date" id="input-sale-date" class="pd-input w-full" />
+            </div>
+          </div>
+
+          <!-- ============================================== -->
+          <!-- TRAINING REQUIREMENTS BLOCK                    -->
+          <!-- ============================================== -->
+          <div id="section-training" class="hidden space-y-3.5">
+            <!-- 1. TRAINING LOCATION -->
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Location</label>
+              <input 
+                type="text" 
+                id="input-training-location"
+                class="pd-input w-full" 
+              />
+            </div>
+
+            <!-- 2. COURSE SELECTION -->
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Course Selection</label>
+              <select id="input-course" class="pd-input w-full">
+                <option value="water_flood_awareness">Water &amp; Flood Awareness (1 Day)</option>
+                <option value="lifejacket_competent_user">Lifejacket Competent User (1 Day)</option>
+                <option value="safe_working_near_water">Safe Working Near Water (1 Day)</option>
+                <option value="safe_working_in_water">Safe Working In Water (2 Days)</option>
+                <option value="work_boat_course">Work Boat Course (2 Days)</option>
+                <option value="rescue_boat_course">Rescue Boat Course (2 Days)</option>
+              </select>
+            </div>
+
+            <!-- 3. NUMBER OF DELEGATES -->
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Number of Delegates</label>
+              <input 
+                type="number" 
+                min="1" 
+                step="1" 
+                id="input-delegates" 
+                class="pd-input w-full" 
+              />
+            </div>
+
+            <!-- 4. DATE -->
+            <div>
+              <label class="block text-[11px] font-medium text-zinc-400 mb-1">Date</label>
+              <input type="date" id="input-training-date" class="pd-input w-full" />
+            </div>
+          </div>
+
+          <!-- NOTES -->
+          <div class="pt-1">
+            <label class="block text-[11px] font-medium text-zinc-400 mb-1">Notes</label>
+            <textarea id="input-notes" rows="2" class="pd-input w-full h-16 py-2 px-3 text-xs resize-none" placeholder="Enter key project requirements, access constraints, or pontoon configurations..."></textarea>
+          </div>
+
+          <!-- SAVE JOB BUTTON -->
+          <div class="pt-1">
+            <button 
+              type="button" 
+              onclick="saveJobAndRedirect()"
+              class="w-full h-10 text-xs font-semibold text-zinc-950 bg-white rounded-md hover:bg-zinc-200 transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>Save Job</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        </div> <!-- /inner dual card wrapper -->
+      </div>
+
+      <!-- VIEW 2: JOBS MASTER TABLE VIEW -->
+      <div id="view-jobs" class="hidden w-full max-w-5xl space-y-4 my-auto">
+        
+        <!-- TABLE TOOLBAR -->
+        <div class="flex justify-between items-center gap-4 bg-zinc-900 p-3 rounded-xl shadow-xs">
+          <div class="flex items-center gap-1.5">
+            <button 
+              onclick="goBack()" 
+              class="w-8 h-8 pd-btn-ghost flex items-center justify-center shadow-xs"
+              title="Back"
+              aria-label="Back"
+            >
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            </button>
+            <button 
+              onclick="switchView('home')" 
+              class="w-8 h-8 pd-btn-ghost flex items-center justify-center shadow-xs"
+              title="Home"
+              aria-label="Home"
+            >
+              <i data-lucide="home" class="w-4 h-4"></i>
+            </button>
+            <h2 class="text-xs font-semibold tracking-tight text-zinc-100 ml-1">All Jobs</h2>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div class="relative w-60">
+              <input 
+                type="text" 
+                id="search-jobs" 
+                oninput="filterJobsTable()" 
+                placeholder="Search jobs..." 
+                class="pd-input h-8 w-full pl-8 pr-3 text-xs placeholder:text-zinc-500"
+              />
+              <span class="absolute left-2.5 top-2 text-zinc-500">
+                <i data-lucide="search" class="w-3.5 h-3.5"></i>
+              </span>
+            </div>
+
+            <button 
+              onclick="switchView('intake')" 
+              class="h-8 px-3 text-xs font-medium bg-white text-zinc-950 rounded-md hover:bg-zinc-200 transition-colors shadow-xs flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+            >
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>New Job</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- JOBS GRID TABLE -->
+        <div class="bg-zinc-900 rounded-xl shadow-xs overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-zinc-950 text-zinc-400 text-[10px] uppercase tracking-wider">
+                  <th class="py-3 px-4 font-semibold">Job Ref</th>
+                  <th class="py-3 px-4 font-semibold">Client</th>
+                  <th class="py-3 px-4 font-semibold">Type</th>
+                  <th class="py-3 px-4 font-semibold">Location</th>
+                  <th class="py-3 px-4 font-semibold">Date</th>
+                  <th class="py-3 px-4 font-semibold">Status</th>
+                  <th class="py-3 px-4 font-semibold text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="jobs-table-body" class="divide-y divide-zinc-800/80">
+                <!-- DYNAMICALLY POPULATED BY RENDER FUNCTION -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+            <!-- VIEW 3: JOB DETAIL / SCOPING SPECIFICATION (DEDICATED FULL SCREEN) -->
+      <div id="view-job-detail" class="hidden w-full max-w-4xl space-y-5 my-auto transition-all">
+        
+        <!-- TOP TOOLBAR: BACK & ACTION BUTTONS -->
+        <div class="flex justify-between items-center gap-4">
+          <div class="flex items-center gap-1.5">
+            <button 
+              onclick="goBack()" 
+              class="w-8 h-8 pd-btn-ghost flex items-center justify-center shadow-xs"
+              title="Back"
+              aria-label="Back"
+            >
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            </button>
+            <button 
+              onclick="switchView('home')" 
+              class="w-8 h-8 pd-btn-ghost flex items-center justify-center shadow-xs"
+              title="Home"
+              aria-label="Home"
+            >
+              <i data-lucide="home" class="w-4 h-4"></i>
+            </button>
+            <div class="ml-1">
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-bold text-zinc-100" id="detail-job-ref">JOB-1040</span>
+                <span id="detail-status-pill" class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-950/60 text-amber-300">
+                  Enquiry
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button 
+              onclick="window.print()" 
+              class="h-8 px-3 text-xs font-semibold bg-white text-zinc-950 rounded-md hover:bg-zinc-200 transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
+            >
+              <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+              <span>Print / Export PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- MAIN SCOPING DOCUMENT SHEET (SPACIOUS FULL CARD) -->
+        <div class="pd-card p-8 space-y-6">
+          
+          <!-- SHEET HEADER -->
+          <div class="flex justify-between items-start pb-5">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 pd-icon-badge font-bold text-xs tracking-wider">
+                P&D
+              </div>
+              <div>
+                <h2 class="text-sm font-bold text-zinc-100 tracking-tight">The Pontoon and Dock Company Ltd</h2>
+                <p class="text-xs text-zinc-400">Commercial Marine Access, Hire &amp; Training &bull; Operational Scoping Sheet</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs font-bold text-zinc-100" id="detail-doc-id">JOB-1040</div>
+              <div class="text-[11px] text-zinc-400 mt-0.5" id="detail-doc-date">2026-11-04</div>
+            </div>
+          </div>
+
+          <!-- 2-COLUMN STRUCTURED OVERVIEW -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            
+            <!-- CLIENT DETAILS -->
+            <div class="pd-card-sub p-5 space-y-3">
+              <div class="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">
+                Client Details
+              </div>
+              <div>
+                <div class="font-bold text-zinc-100 text-sm" id="detail-doc-company">Apex Civil Works Ltd</div>
+                <div class="text-zinc-300 font-medium text-xs mt-0.5" id="detail-doc-contact">Alex Davies</div>
+              </div>
+              <div class="pt-2 pt-2 text-xs text-zinc-400 space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-zinc-500">Tel:</span>
+                  <span id="detail-doc-phone" class="text-zinc-200">07700 900123</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-zinc-500">Email:</span>
+                  <span id="detail-doc-email" class="text-zinc-200">a.davies@apexcivil.co.uk</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- JOB OVERVIEW -->
+            <div class="pd-card-sub p-5 space-y-2">
+              <div class="text-[10px] font-bold uppercase text-zinc-400 tracking-wider mb-2">
+                Job Overview
+              </div>
+              <div class="space-y-2 text-xs">
+                <div class="flex justify-between items-center py-1 bg-zinc-900/40 px-2 rounded">
+                  <span class="text-zinc-400">Stream</span>
+                  <span class="font-bold text-zinc-100 uppercase text-xs" id="detail-doc-type">HIRE</span>
+                </div>
+                <div class="flex justify-between items-center py-1 bg-zinc-900/40 px-2 rounded">
+                  <span class="text-zinc-400">Date</span>
+                  <span class="font-medium text-zinc-100 text-xs" id="detail-doc-targetdate">2026-11-20</span>
+                </div>
+                <div class="flex justify-between items-center py-1 bg-zinc-900/40 px-2 rounded">
+                  <span class="text-zinc-400">Scope</span>
+                  <span class="font-medium text-zinc-100 text-xs" id="detail-doc-supply">Supply &amp; Install</span>
+                </div>
+                <div class="flex justify-between items-center py-1">
+                  <span class="text-zinc-400">Source</span>
+                  <span class="text-zinc-200 capitalize text-xs" id="detail-doc-source">Phone</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- SITE & SPECIFICATIONS -->
+          <div class="pd-card-sub p-5 space-y-3">
+            <div class="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">
+              Site &amp; Specifications
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div>
+                <span class="text-[10px] text-zinc-500 block uppercase">Site Location</span>
+                <div class="font-medium text-zinc-100 mt-1 leading-relaxed" id="detail-doc-location">
+                  Meadow Water Park, Gloucester, GL1 2AB
+                </div>
+              </div>
+              <div>
+                <span class="text-[10px] text-zinc-500 block uppercase">Operational Requirements</span>
+                <div class="font-medium text-zinc-100 mt-1 leading-relaxed" id="detail-doc-dimensions">
+                  Area: 48 m² &bull; 4 Weeks &bull; Still Water
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CLIENT NOTES CALLOUT -->
+          <div class="pd-card-sub p-5 space-y-1.5">
+            <div class="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">
+              Client Notes &amp; Instructions
+            </div>
+            <p class="text-zinc-200 text-xs leading-relaxed" id="detail-doc-notes">
+              Access platform required for culvert maintenance and water quality sampling.
+            </p>
+          </div>
+
+          <!-- STAGE 2 ACTION BLOCK: STRICT DISCIPLINED PROGRESSION -->
+          <div class="pd-card-sub p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">Stage 2</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-950/80 text-blue-300">Mandatory Gate</span>
+              </div>
+              <div class="text-xs text-zinc-200 font-semibold">Site Feasibility &amp; Risk Assessment</div>
+              <div class="text-[11px] text-zinc-400">Verify water access, Google Maps satellite view, and record site hazard toggles before quoting.</div>
+            </div>
+
+            <div class="flex items-center gap-2 self-end sm:self-auto">
+              <button 
+                onclick="switchView('feasibility', currentActiveJobId)"
+                class="h-9 px-3.5 pd-btn-ghost flex items-center gap-2 text-xs font-semibold hover:text-white"
+                title="Conduct Site Feasibility"
+              >
+                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
+                <span>Feasibility</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- VIEW 3: SITE FEASIBILITY & RISK ASSESSMENT -->
+      <div id="view-site-feasibility" class="hidden w-full max-w-4xl space-y-5 my-auto transition-all">
+        <!-- TOP TOOLBAR: BACK & TITLE -->
+        <div class="flex justify-between items-center gap-4">
+          <div class="flex items-center gap-1.5">
+            <button 
+              onclick="goBack()" 
+              class="w-8 h-8 pd-btn-ghost flex items-center justify-center shadow-xs"
+              title="Back"
+            >
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            </button>
+            <button 
+              onclick="switchView('home')" 
+              class="w-8 h-8 pd-btn-ghost flex items-center justify-center shadow-xs"
+              title="Home"
+            >
+              <i data-lucide="home" class="w-4 h-4"></i>
+            </button>
+            <div class="ml-1">
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-bold text-zinc-100" id="feasibility-job-ref">JOB-1040</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-950/60 text-emerald-300">
+                  Site Feasibility
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN CARD -->
+        <div class="pd-card p-6 space-y-6">
+          
+          <!-- LOCATION HEADER & DUAL WHAT3WORDS -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-2">
+            
+            <div class="pd-card-sub p-4 space-y-3">
+              <div class="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">
+                Site &amp; Launch Access
+              </div>
+              <div class="space-y-1">
+                <div class="text-xs text-zinc-400">Site Location:</div>
+                <div class="font-medium text-zinc-100 text-xs" id="feasibility-location-text">
+                  Meadow Water Park, Mill Lane, Gloucester, GL1 2AB
+                </div>
+              </div>
+
+              <!-- DUAL W3W INPUTS -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <div>
+                  <label class="text-[10px] text-zinc-400 block mb-1">Pontoon W3W</label>
+                  <input 
+                    type="text" 
+                    id="w3w-pontoon" 
+                    value="///frogs.river.nest" 
+                    class="pd-input w-full h-8 px-2.5 text-xs text-zinc-100 font-medium"
+                    placeholder="///word.word.word"
+                  />
+                </div>
+                <div>
+                  <label class="text-[10px] text-zinc-400 block mb-1">Access / Launch W3W</label>
+                  <input 
+                    type="text" 
+                    id="w3w-access" 
+                    value="///gate.launch.gravel" 
+                    class="pd-input w-full h-8 px-2.5 text-xs text-zinc-100 font-medium"
+                    placeholder="///word.word.word"
+                  />
+                </div>
+              </div>
+
+              <!-- MAP LAUNCHER ICONS (FREE EXTERNAL BROWSERS) -->
+              <div class="flex items-center gap-2 pt-2">
+                <button 
+                  onclick="openGoogleMaps()" 
+                  class="h-8 px-3 pd-btn-ghost flex items-center gap-1.5 text-xs text-zinc-200 hover:text-white"
+                  title="Open location in Google Maps / Satellite"
+                >
+                  <i data-lucide="map" class="w-3.5 h-3.5 text-blue-400"></i>
+                  <span>Google Maps</span>
+                  <i data-lucide="external-link" class="w-3 h-3 text-zinc-500"></i>
+                </button>
+
+                <button 
+                  onclick="openWhat3Words()" 
+                  class="h-8 px-3 pd-btn-ghost flex items-center gap-1.5 text-xs text-zinc-200 hover:text-white"
+                  title="Open location in What3Words"
+                >
+                  <i data-lucide="globe" class="w-3.5 h-3.5 text-red-400"></i>
+                  <span>What3Words</span>
+                  <i data-lucide="external-link" class="w-3 h-3 text-zinc-500"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- INLINE SATELLITE MOCKUP CARD -->
+            <div class="pd-card-sub p-4 relative overflow-hidden flex flex-col justify-between min-h-[180px] bg-zinc-950/70">
+              <div class="flex items-center justify-between z-10">
+                <span class="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">Aerial Satellite Preview</span>
+                <span class="px-2 py-0.5 rounded text-[10px] bg-zinc-900 text-zinc-400 font-mono">51.8642° N, 2.2381° W</span>
+              </div>
+
+              <!-- SIMULATED WATERWAY / SATELLITE TILE -->
+              <div class="my-auto py-6 flex flex-col items-center justify-center text-center relative z-10 gap-3">
+                <div class="flex items-center gap-4">
+                  <div class="flex items-center gap-1.5 bg-blue-950/80 px-2.5 py-1 rounded-md text-blue-300 text-[11px] font-medium shadow-xs">
+                    <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                    <span>Water Mooring (Pontoon)</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 bg-amber-950/80 px-2.5 py-1 rounded-md text-amber-300 text-[11px] font-medium shadow-xs">
+                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <span>Lorry / Launch Gate</span>
+                  </div>
+                </div>
+                <div class="text-[11px] text-zinc-500">Approx. 45m carry distance from hardstanding road to water edge</div>
+              </div>
+
+              <div class="flex justify-between items-center text-[10px] text-zinc-500 z-10">
+                <span>Satellite Layer: Active</span>
+                <span class="text-zinc-400">Free Browser Inspection</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RISK REGISTER HAZARDS MATRIX (TOGGLES FEEDING RISK TABLE) -->
+          <div class="pd-card-sub p-5 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-bold uppercase text-zinc-400 tracking-wider block">Risk Register Identification</span>
+                <div class="text-xs font-semibold text-zinc-100 mt-0.5">Site-Specific &amp; Operational Hazard Toggles</div>
+              </div>
+              <div id="risk-count-badge" class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-amber-950/80 text-amber-300">
+                2 Active Risks
+              </div>
+            </div>
+
+            <!-- TOGGLES GRID -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              
+              <!-- HAZARD 1: TIDAL / FLOW -->
+              <label class="flex items-center justify-between p-3 rounded-lg bg-zinc-900/60 hover:bg-zinc-800/60 transition cursor-pointer">
+                <div>
+                  <div class="text-xs font-medium text-zinc-200">Tidal / Fast Water</div>
+                  <div class="text-[10px] text-zinc-400">&gt; 2 knots flow rate</div>
+                </div>
+                <input type="checkbox" id="risk-tidal" onchange="updateRiskCount()" class="accent-emerald-500 w-4 h-4 cursor-pointer" />
+              </label>
+
+              <!-- HAZARD 2: OVERHEAD CABLES -->
+              <label class="flex items-center justify-between p-3 rounded-lg bg-zinc-900/60 hover:bg-zinc-800/60 transition cursor-pointer">
+                <div>
+                  <div class="text-xs font-medium text-zinc-200">Overhead Powerlines</div>
+                  <div class="text-[10px] text-zinc-400">Within 15m radius</div>
+                </div>
+                <input type="checkbox" id="risk-cables" checked onchange="updateRiskCount()" class="accent-emerald-500 w-4 h-4 cursor-pointer" />
+              </label>
+
+              <!-- HAZARD 3: UNDERGROUND UTILITIES -->
+              <label class="flex items-center justify-between p-3 rounded-lg bg-zinc-900/60 hover:bg-zinc-800/60 transition cursor-pointer">
+                <div>
+                  <div class="text-xs font-medium text-zinc-200">Ground Penetration</div>
+                  <div class="text-[10px] text-zinc-400">Ground pins / CAT scan</div>
+                </div>
+                <input type="checkbox" id="risk-ground" onchange="updateRiskCount()" class="accent-emerald-500 w-4 h-4 cursor-pointer" />
+              </label>
+
+              <!-- HAZARD 4: CULVERT / RESTRICTED HEADROOM -->
+              <label class="flex items-center justify-between p-3 rounded-lg bg-zinc-900/60 hover:bg-zinc-800/60 transition cursor-pointer">
+                <div>
+                  <div class="text-xs font-medium text-zinc-200">Culvert / Headroom</div>
+                  <div class="text-[10px] text-zinc-400">&lt; 2.5m clearance</div>
+                </div>
+                <input type="checkbox" id="risk-headroom" checked onchange="updateRiskCount()" class="accent-emerald-500 w-4 h-4 cursor-pointer" />
+              </label>
+
+              <!-- HAZARD 5: HIAB / CRANE LIFT REQUIRED -->
+              <label class="flex items-center justify-between p-3 rounded-lg bg-zinc-900/60 hover:bg-zinc-800/60 transition cursor-pointer">
+                <div>
+                  <div class="text-xs font-medium text-zinc-200">Crane / HIAB Pad</div>
+                  <div class="text-[10px] text-zinc-400">Lift plan required</div>
+                </div>
+                <input type="checkbox" id="risk-crane" onchange="updateRiskCount()" class="accent-emerald-500 w-4 h-4 cursor-pointer" />
+              </label>
+
+              <!-- HAZARD 6: FRAP / PERMIT REQUIRED -->
+              <label class="flex items-center justify-between p-3 rounded-lg bg-zinc-900/60 hover:bg-zinc-800/60 transition cursor-pointer">
+                <div>
+                  <div class="text-xs font-medium text-zinc-200">FRAP / EA Permit</div>
+                  <div class="text-[10px] text-zinc-400">Environment Agency</div>
+                </div>
+                <input type="checkbox" id="risk-frap" onchange="updateRiskCount()" class="accent-emerald-500 w-4 h-4 cursor-pointer" />
+              </label>
+
+            </div>
+          </div>
+
+          <!-- STAGE 3 ACTION BLOCK: AT BOTTOM OF CARD (MATCHING JOB CARD PATTERN) -->
+          <div class="pd-card-sub p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">Stage 3</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-950/80 text-emerald-300">Next Action</span>
+              </div>
+              <div class="text-xs text-zinc-200 font-semibold">Proceed to Quote Formulation</div>
+              <div class="text-[11px] text-zinc-400">Configure m² kit quantities, calculate modular cubes, and assign crew resources.</div>
+            </div>
+
+            <div class="flex items-center gap-2 self-end sm:self-auto">
+              <button 
+                onclick="switchView('quote', currentActiveJobId)"
+                class="h-9 px-3.5 pd-btn-ghost flex items-center gap-2 text-xs font-semibold hover:text-white"
+                title="Open Quote Builder"
+              >
+                <i data-lucide="calculator" class="w-4 h-4 text-blue-400"></i>
+                <span>Quote</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- VIEW 4: MODULAR QUOTE BUILDER -->
+      <div id="view-quote-builder" class="hidden w-full max-w-4xl space-y-5 my-auto transition-all">
+        <!-- TOP TOOLBAR: BACK & TITLE -->
+        <div class="flex justify-between items-center gap-4">
+          <div class="flex items-center gap-1.5">
+            <button 
+              onclick="goBack()" 
+              class="w-8 h-8 pd-btn-ghost flex items-center justify-center shadow-xs"
+              title="Back"
+            >
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            </button>
+            <button 
+              onclick="switchView('home')" 
+              class="w-8 h-8 pd-btn-ghost flex items-center justify-center shadow-xs"
+              title="Home"
+            >
+              <i data-lucide="home" class="w-4 h-4"></i>
+            </button>
+            <div class="ml-1">
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-bold text-zinc-100" id="quote-job-ref">JOB-1040</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-950/60 text-blue-300">
+                  Quote Builder
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN QUOTE CONTAINER -->
+        <div class="pd-card p-6 space-y-6">
+          
+          <!-- CONFIGURATION CONTROLS (REACTIVELY RECALCULATES) -->
+          <div class="pd-card-sub p-5 space-y-4">
+            <div class="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">
+              Pontoon Dimensions &amp; Operational Duration
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+              <div>
+                <label class="text-[10px] text-zinc-400 block mb-1">Length (m)</label>
+                <input 
+                  type="number" 
+                  id="quote-len" 
+                  value="12" 
+                  min="1" 
+                  step="0.5" 
+                  oninput="recalcQuoteFromDims()" 
+                  class="pd-input w-full h-8 px-2.5 text-xs text-zinc-100 font-semibold"
+                />
+              </div>
+
+              <div>
+                <label class="text-[10px] text-zinc-400 block mb-1">Width (m)</label>
+                <input 
+                  type="number" 
+                  id="quote-wid" 
+                  value="4" 
+                  min="1" 
+                  step="0.5" 
+                  oninput="recalcQuoteFromDims()" 
+                  class="pd-input w-full h-8 px-2.5 text-xs text-zinc-100 font-semibold"
+                />
+              </div>
+
+              <div>
+                <label class="text-[10px] text-zinc-400 block mb-1">Calculated Area</label>
+                <div class="h-8 flex items-center px-2.5 rounded bg-zinc-950/60 text-emerald-400 font-bold text-xs">
+                  <span id="quote-area-display">48</span>&nbsp;m²
+                </div>
+              </div>
+
+              <div>
+                <label class="text-[10px] text-zinc-400 block mb-1">Hire Duration (Weeks)</label>
+                <input 
+                  type="number" 
+                  id="quote-weeks" 
+                  value="4" 
+                  min="1" 
+                  oninput="recalcQuote()" 
+                  class="pd-input w-full h-8 px-2.5 text-xs text-zinc-100 font-semibold"
+                />
+              </div>
+            </div>
+
+            <!-- HUMAN RESOURCE CONFIGURATION -->
+            <div class="pt-2 border-t border-zinc-800/50 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div class="flex items-center gap-4">
+                <span class="text-zinc-400 text-[11px]">Human Resource:</span>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-zinc-500">Crew:</span>
+                  <input type="number" id="quote-crew" value="2" min="1" max="6" oninput="recalcQuote()" class="pd-input w-14 h-7 text-center font-semibold" />
+                  <span class="text-zinc-400 text-[11px]">Operatives</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-zinc-500">Days:</span>
+                  <input type="number" id="quote-crew-days" value="2" min="1" max="10" oninput="recalcQuote()" class="pd-input w-14 h-7 text-center font-semibold" />
+                  <span class="text-zinc-400 text-[11px]">Install &amp; Derig</span>
+                </div>
+              </div>
+
+              <div class="text-[11px] text-zinc-500">
+                Rate: £320 / day / operative (CSCS &amp; Water Safety)
+              </div>
+            </div>
+
+          </div>
+
+          <!-- AUTO-CALCULATED BILL OF MATERIALS (INVENTORY TABLE) -->
+          <div class="pd-card-sub p-5 space-y-3">
+            <div class="flex justify-between items-center">
+              <div class="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">
+                Bill of Materials &bull; Inventory Requirements
+              </div>
+              <span class="text-[11px] text-zinc-400 font-mono">Formula: m² × 4 cubes (500x500mm)</span>
+            </div>
+
+            <div class="space-y-2 text-xs">
+              
+              <!-- ROW 1: MODULAR CUBES -->
+              <div class="flex justify-between items-center py-2 px-3 bg-zinc-900/60 rounded-md">
+                <div class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  <span class="font-medium text-zinc-200">Single Modular Cubes (500×500×400mm)</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="text-zinc-400 font-mono">Yard: <span class="text-emerald-400 font-bold">450</span></span>
+                  <span class="font-bold text-zinc-100 font-mono w-16 text-right"><span id="bom-cubes">192</span> qty</span>
+                </div>
+              </div>
+
+              <!-- ROW 2: CONNECTING PINS -->
+              <div class="flex justify-between items-center py-2 px-3 bg-zinc-900/60 rounded-md">
+                <div class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  <span class="font-medium text-zinc-200">Connecting Short Pins &amp; Spacers</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="text-zinc-400 font-mono">Yard: <span class="text-emerald-400 font-bold">600</span></span>
+                  <span class="font-bold text-zinc-100 font-mono w-16 text-right"><span id="bom-pins">192</span> qty</span>
+                </div>
+              </div>
+
+              <!-- ROW 3: HANDRAILS -->
+              <div class="flex justify-between items-center py-2 px-3 bg-zinc-900/60 rounded-md">
+                <div class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  <span class="font-medium text-zinc-200">Perimeter Handrail Sections (2m standard)</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="text-zinc-400 font-mono">Yard: <span class="text-emerald-400 font-bold">85</span></span>
+                  <span class="font-bold text-zinc-100 font-mono w-16 text-right"><span id="bom-handrails">16</span> qty</span>
+                </div>
+              </div>
+
+              <!-- ROW 4: ANCHORING PACKAGE -->
+              <div class="flex justify-between items-center py-2 px-3 bg-zinc-900/60 rounded-md">
+                <div class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                  <span class="font-medium text-zinc-200">Anchoring Package (Deadweights &amp; Chains)</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="text-zinc-400 font-mono">Yard: <span class="text-emerald-400 font-bold">24</span></span>
+                  <span class="font-bold text-zinc-100 font-mono w-16 text-right"><span id="bom-anchors">4</span> pk</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- COMMERCIAL PRICING SUMMARY -->
+          <div class="pd-card-sub p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <span class="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">Commercial Quotation Breakdown</span>
+              <div class="text-xs text-zinc-400 flex items-center gap-3">
+                <span>Fleet Dry-Hire: <strong class="text-zinc-200 font-mono" id="cost-fleet">£1,920</strong></span>
+                <span>&bull;</span>
+                <span>Human Resource: <strong class="text-zinc-200 font-mono" id="cost-crew">£1,280</strong></span>
+                <span>&bull;</span>
+                <span>Transport / HIAB: <strong class="text-zinc-200 font-mono">£650</strong></span>
+              </div>
+            </div>
+
+            <div class="text-right self-end sm:self-auto">
+              <span class="text-[10px] text-zinc-400 block uppercase">Total Quote (Excl. VAT)</span>
+              <div class="text-lg font-bold text-emerald-400 font-mono" id="cost-total">£3,850.00</div>
+            </div>
+          </div>
+
+          <!-- STAGE 4 ACTION BLOCK: AT BOTTOM OF CARD (CONSISTENT POSITION) -->
+          <div class="pd-card-sub p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">Stage 4</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-950/80 text-emerald-300">Quote Ready</span>
+              </div>
+              <div class="text-xs text-zinc-200 font-semibold">Save Quote &amp; Link to Job</div>
+              <div class="text-[11px] text-zinc-400">Lock bill of materials and update job status to Quoted.</div>
+            </div>
+
+            <div class="flex items-center gap-2 self-end sm:self-auto">
+              <button 
+                onclick="saveQuote()"
+                class="h-9 px-3.5 pd-btn-ghost flex items-center gap-2 text-xs font-semibold hover:text-white"
+                title="Save Quote to Job"
+              >
+                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                <span>Save Quote</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- VIEW 5: RESOURCES OVERVIEW -->
+      <div id="view-resources" class="hidden w-full max-w-4xl space-y-5 my-auto transition-all">
+        <!-- TOP TOOLBAR: BACK & TITLE -->
+        <div class="flex justify-between items-center gap-4">
+          <div class="flex items-center gap-1.5">
+            <button 
+              onclick="goBack()" 
+              class="w-8 h-8 pd-btn-ghost flex items-center justify-center shadow-xs"
+              title="Back"
+            >
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            </button>
+            <button 
+              onclick="switchView('home')" 
+              class="w-8 h-8 pd-btn-ghost flex items-center justify-center shadow-xs"
+              title="Home"
+            >
+              <i data-lucide="home" class="w-4 h-4"></i>
+            </button>
+            <div class="ml-1">
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-bold text-zinc-100">Operational Resources</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-zinc-800 text-zinc-300">
+                  Fleet &amp; Crew
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- INVENTORY CARD -->
+          <div class="pd-card p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i data-lucide="boxes" class="w-4 h-4 text-emerald-400"></i>
+                <h3 class="text-xs font-bold text-zinc-100">Physical Fleet Inventory</h3>
+              </div>
+              <span class="text-[10px] text-zinc-400">4 Categories</span>
+            </div>
+
+            <div class="space-y-2 text-xs">
+              <div class="p-3 bg-zinc-950/60 rounded-lg flex justify-between items-center">
+                <div>
+                  <div class="font-medium text-zinc-200">Single Cubes (500×500)</div>
+                  <div class="text-[10px] text-zinc-400">Dry-hire: £2.50 / cube / wk</div>
+                </div>
+                <span class="font-bold text-emerald-400 font-mono">450 in yard</span>
+              </div>
+
+              <div class="p-3 bg-zinc-950/60 rounded-lg flex justify-between items-center">
+                <div>
+                  <div class="font-medium text-zinc-200">Perimeter Handrails (2m)</div>
+                  <div class="text-[10px] text-zinc-400">Galvanised steel &bull; 1.1m H</div>
+                </div>
+                <span class="font-bold text-emerald-400 font-mono">85 in yard</span>
+              </div>
+
+              <div class="p-3 bg-zinc-950/60 rounded-lg flex justify-between items-center">
+                <div>
+                  <div class="font-medium text-zinc-200">Deadweights &amp; Sinkers</div>
+                  <div class="text-[10px] text-zinc-400">Concrete anchor blocks 250kg</div>
+                </div>
+                <span class="font-bold text-emerald-400 font-mono">24 in yard</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- HUMAN RESOURCE CARD -->
+          <div class="pd-card p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i data-lucide="users" class="w-4 h-4 text-blue-400"></i>
+                <h3 class="text-xs font-bold text-zinc-100">Human Resources (Crew)</h3>
+              </div>
+              <span class="text-[10px] text-zinc-400">6 Certified</span>
+            </div>
+
+            <div class="space-y-2 text-xs">
+              <div class="p-3 bg-zinc-950/60 rounded-lg flex justify-between items-center">
+                <div>
+                  <div class="font-medium text-zinc-200">Lead Marine Installer</div>
+                  <div class="text-[10px] text-zinc-400">CSCS Gold, RYA Powerboat, DEFRA 2</div>
+                </div>
+                <span class="font-bold text-zinc-200 font-mono">£350 / day</span>
+              </div>
+
+              <div class="p-3 bg-zinc-950/60 rounded-lg flex justify-between items-center">
+                <div>
+                  <div class="font-medium text-zinc-200">Pontoon Rigger</div>
+                  <div class="text-[10px] text-zinc-400">CSCS Blue, Water Safety &amp; Rescue</div>
+                </div>
+                <span class="font-bold text-zinc-200 font-mono">£290 / day</span>
+              </div>
+
+              <div class="p-3 bg-zinc-950/60 rounded-lg flex justify-between items-center">
+                <div>
+                  <div class="font-medium text-zinc-200">Safety Boat Skipper</div>
+                  <div class="text-[10px] text-zinc-400">RYA Commercial Endorsement</div>
+                </div>
+                <span class="font-bold text-zinc-200 font-mono">£360 / day</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- HIDEABLE DATABASE SCHEMA PANEL (ON THE RIGHT) -->
+    <aside 
+      id="schemaPanel" 
+      class="hidden w-96 lg:w-[500px] bg-zinc-900 p-6 flex flex-col justify-between overflow-y-auto shadow-2xl z-20 flex-shrink-0"
+    >
+      <div class="space-y-5">
+        
+        <!-- PANEL HEADER -->
+        <div class="flex justify-between items-center pb-3">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-400 ">Database Architecture</h3>
+            <div class="text-sm font-bold text-zinc-100 mt-0.5">Table: <code class="text-emerald-400 bg-emerald-950/50 px-1.5 py-0.5 rounded">jobs</code></div>
+          </div>
+          <button onclick="toggleSchemaPanel()" class="text-zinc-400 hover:text-white p-1 rounded hover:bg-zinc-800 transition cursor-pointer">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- TABLE SUMMARY -->
+        <p class="text-xs text-zinc-400 leading-relaxed">
+          Single master record in Dataverse / SQL. Append-only architecture ensures complete accountability, immutable versioning, and auditable stage transitions across all job types.
+        </p>
+
+        <!-- COLUMNS LIST -->
+        <div class="space-y-2">
+          <div class="text-[11px] font-bold text-zinc-300 uppercase  tracking-wider">Columns (Jobs Table)</div>
+          
+          <div class="bg-zinc-950 rounded-lg text-xs overflow-hidden">
+            
+            <!-- PRIMARY KEY -->
+            <div class="p-2 flex justify-between items-center bg-zinc-950/60">
+              <div class="whitespace-nowrap"><span class="font-bold text-zinc-100">id</span> <span class="text-[10px] text-zinc-300 bg-zinc-800 px-1 rounded ml-1 ">PK</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">uuid</span>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">contact_name</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">text</span>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">company_name</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">text</span>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">company_number</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">text | null</span>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">phone</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">text</span>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">email</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">text</span>
+            </div>
+
+            <div class="p-2 space-y-1">
+              <div class="flex justify-between items-center">
+                <span class="font-medium text-zinc-200">enquiry_source</span>
+                <span class="text-zinc-400 text-[11px]">choice</span>
+              </div>
+              <div class="text-zinc-400 text-[11px]  leading-normal">
+                'ads' | 'web' | 'social' | 'phone' | 'email' | 'event' | 'referral'
+              </div>
+            </div>
+
+            <div class="p-2 space-y-1">
+              <div class="flex justify-between items-center">
+                <span class="font-medium text-zinc-200">job_type</span>
+                <span class="text-zinc-400 text-[11px]">choice</span>
+              </div>
+              <div class="text-zinc-400 text-[11px]  leading-normal">
+                'hire' | 'sale' | 'training'
+              </div>
+            </div>
+
+            <!-- FULL MASTER COLUMNS -->
+            <div class="p-2 space-y-1">
+              <div class="flex justify-between items-center">
+                <span class="font-medium text-zinc-200">supply_type</span>
+                <span class="text-zinc-400 text-[11px]">choice</span>
+              </div>
+              <div class="text-zinc-400 text-[11px]  leading-normal">
+                'supply_only' | 'supply_and_install' | 'service_only'
+              </div>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">location</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">text</span>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">postcode</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">text | null</span>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">course_name</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">text | null</span>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">attendee_count</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">int | null</span>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">approx_area_m2</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">numeric | null</span>
+            </div>
+
+            <div class="p-2 space-y-1">
+              <div class="flex justify-between items-center">
+                <span class="font-medium text-zinc-200">water_type</span>
+                <span class="text-zinc-400 text-[11px]">choice | null</span>
+              </div>
+              <div class="text-zinc-400 text-[11px]  leading-normal">
+                'still' | 'tidal'
+              </div>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">target_date</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">date | null</span>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">duration_value</span> / <span class="font-medium text-zinc-200">unit</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">int, text | null</span>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">notes</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">text | null</span>
+            </div>
+
+            <div class="p-2 flex justify-between items-center">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">status</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2  text-amber-400">enquiry</span>
+            </div>
+
+            <!-- AUDIT & ACCOUNTABILITY (APPEND-ONLY) -->
+            <div class="p-2 flex justify-between items-center bg-zinc-950/60">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">created_on</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">timestamp (auto)</span>
+            </div>
+
+            <div class="p-2 flex justify-between items-center bg-zinc-950/60">
+              <div class="whitespace-nowrap"><span class="font-medium text-zinc-200">created_by</span></div>
+              <span class="text-zinc-400 text-[11px] whitespace-nowrap pl-2">user_id / email (auto)</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- FOOTER NOTE -->
+      <div class="pt-4 text-[11px] text-zinc-500">
+        Append-Only Master Architecture &bull; Table: jobs
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- INTERACTIVE SCRIPTS -->
+  <script>
+    function toggleSaleInstall() {
+      const isInstall = document.getElementById('install-yes')?.checked;
+      const waterGroup = document.getElementById('sale-water-group');
+      if (waterGroup) {
+        if (isInstall) {
+          waterGroup.classList.remove('hidden');
+        } else {
+          waterGroup.classList.add('hidden');
+        }
+      }
+    }
+
+    function toggleConditionalSections() {
+      const selectedType = document.querySelector('input[name="type"]:checked')?.value;
+      const reqCard = document.getElementById('section-requirements-card');
+      const badgeType = document.getElementById('badge-enquiry-type');
+      const hireSection = document.getElementById('section-hire');
+      const saleSection = document.getElementById('section-sale');
+      const trainingSection = document.getElementById('section-training');
+
+      if (selectedType) {
+        reqCard.classList.remove('hidden');
+        badgeType.textContent = selectedType.toUpperCase();
+      } else {
+        reqCard.classList.add('hidden');
+      }
+
+      if (selectedType === 'hire') {
+        hireSection.classList.remove('hidden');
+        saleSection.classList.add('hidden');
+        trainingSection.classList.add('hidden');
+      } else if (selectedType === 'sale') {
+        hireSection.classList.add('hidden');
+        saleSection.classList.remove('hidden');
+        trainingSection.classList.add('hidden');
+        toggleSaleInstall();
+      } else if (selectedType === 'training') {
+        hireSection.classList.add('hidden');
+        saleSection.classList.add('hidden');
+        trainingSection.classList.remove('hidden');
+      } else {
+        hireSection.classList.add('hidden');
+        saleSection.classList.add('hidden');
+        trainingSection.classList.add('hidden');
+      }
+    }
+
+    function populateFakeData(type = 'hire') {
+      if (type === 'hire') {
+        document.getElementById('input-source').value = 'phone';
+        document.getElementById('input-name').value = 'Alex Davies';
+        document.getElementById('input-company').value = 'Apex Civil Works Ltd';
+        document.getElementById('input-phone').value = '07700 900123';
+        document.getElementById('input-email').value = 'a.davies@apexcivil.co.uk';
+        document.getElementById('type-hire').checked = true;
+        toggleConditionalSections();
+
+        document.getElementById('input-location').value = 'Meadow Water Park, Mill Lane, Gloucester, GL1 2AB';
+        document.getElementById('input-date').value = '2026-11-20';
+        document.getElementById('input-duration-val').value = '4';
+        document.getElementById('input-duration-unit').value = 'Weeks';
+        document.getElementById('water-still').checked = true;
+        document.getElementById('input-size').value = '48';
+        document.getElementById('input-notes').value = 'Access platform required for culvert maintenance and water quality sampling.';
+      } else if (type === 'sale') {
+        document.getElementById('input-source').value = 'email';
+        document.getElementById('input-name').value = 'Emma Richardson';
+        document.getElementById('input-company').value = 'Harbour View Watersports';
+        document.getElementById('input-phone').value = '07700 900456';
+        document.getElementById('input-email').value = 'e.richardson@harbourview.co.uk';
+        document.getElementById('type-sale').checked = true;
+        toggleConditionalSections();
+
+        document.getElementById('input-sale-location').value = 'Wharf Quay, Riverside Way, Bristol, BS1 4CD';
+        document.getElementById('install-yes').checked = true;
+        toggleSaleInstall();
+        document.getElementById('water-sale-tidal').checked = true;
+        document.getElementById('input-sale-size').value = '36';
+        document.getElementById('input-sale-date').value = '2026-12-15';
+        document.getElementById('input-notes').value = 'Modular pontoon extension for dinghy berthing. Client requires cleat fittings and ramp connection.';
+      } else if (type === 'training') {
+        document.getElementById('input-source').value = 'referral';
+        document.getElementById('input-name').value = 'Mark Stevens';
+        document.getElementById('input-company').value = 'Channel Maritime Operations Ltd';
+        document.getElementById('input-phone').value = '07700 900789';
+        document.getElementById('input-email').value = 'm.stevens@channelmaritime.co.uk';
+        document.getElementById('type-training').checked = true;
+        toggleConditionalSections();
+
+        document.getElementById('input-training-location').value = 'Eastern Docks, Dover, CT16 1JA';
+        document.getElementById('input-course').value = 'safe_working_near_water';
+        document.getElementById('input-delegates').value = '4';
+        document.getElementById('input-training-date').value = '2026-12-08';
+        document.getElementById('input-notes').value = 'Site safety team water rescue and bankside safety certification.';
+      }
+    }
+
+    function clearForm() {
+      document.querySelectorAll('input[type="text"], input[type="tel"], input[type="email"], input[type="date"], input[type="number"], textarea').forEach(el => el.value = '');
+      document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+      document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+      const sourceInput = document.getElementById('input-source');
+      if (sourceInput) sourceInput.value = 'phone';
+      // Reset default enquiry type to hire cleanly
+      const typeHire = document.getElementById('type-hire');
+      if (typeHire) typeHire.checked = true;
+      toggleConditionalSections();
+    }
+
+    // ==========================================
+    // JOBS MASTER DATA & STATE MANAGEMENT
+    // ==========================================
+    let jobsData = [
+      {
+        id: 'JOB-1040',
+        company: 'Apex Civil Works Ltd',
+        contact: 'Alex Davies',
+        phone: '07700 900123',
+        email: 'a.davies@apexcivil.co.uk',
+        source: 'phone',
+        type: 'hire',
+        supply_type: 'supply_and_install',
+        location: 'Meadow Water Park, Mill Lane, Gloucester',
+        postcode: 'GL1 2AB',
+        target_date: '2026-11-20',
+        water_type: 'still',
+        approx_area: '48 m²',
+        duration: '4 Weeks',
+        delegates: null,
+        course_name: null,
+        w3w_pontoon: '///frogs.river.nest',
+        w3w_access: '///gravel.lorry.entry',
+        hazards: ['risk-ground', 'risk-headroom'],
+        notes: 'Temporary modular floating platform for culvert inspection and water sampling. Site team requires perimeter edge handrails and deadweight anchor system.',
+        status: 'enquiry',
+        created_on: '2026-11-04 09:14'
+      },
+      {
+        id: 'JOB-1041',
+        company: 'Harbour View Marina & Yacht Club',
+        contact: 'Emma Richardson',
+        phone: '07700 900456',
+        email: 'e.richardson@harbourview.co.uk',
+        source: 'email',
+        type: 'sale',
+        supply_type: 'supply_and_install',
+        location: 'Wharf Quay, Riverside Way, Bristol Harbour',
+        postcode: 'BS1 4CD',
+        target_date: '2026-12-15',
+        water_type: 'tidal',
+        approx_area: '36 m²',
+        duration: null,
+        delegates: null,
+        course_name: null,
+        w3w_pontoon: '///boats.tide.dock',
+        w3w_access: '///crane.quay.gate',
+        hazards: ['risk-tidal', 'risk-crane'],
+        notes: 'Permanent modular dock extension for dinghy berthing and tender access. Client requires heavy-duty stainless steel cleat fittings and 6m aluminium gangway connection.',
+        status: 'enquiry',
+        created_on: '2026-11-04 10:22'
+      },
+      {
+        id: 'JOB-1042',
+        company: 'Channel Maritime Operations Ltd',
+        contact: 'Mark Stevens',
+        phone: '07700 900789',
+        email: 'm.stevens@channelmaritime.co.uk',
+        source: 'referral',
+        type: 'training',
+        supply_type: 'service_only',
+        location: 'Marine Training Basin, Eastern Docks, Dover',
+        postcode: 'CT16 1JA',
+        target_date: '2026-12-08',
+        water_type: 'tidal',
+        approx_area: null,
+        duration: '2 Days',
+        delegates: '6 Delegates',
+        course_name: 'Safe Working Near Water & Bankside Safety',
+        w3w_pontoon: '///beacon.harbour.dive',
+        w3w_access: '///gate.docks.secure',
+        hazards: ['risk-tidal'],
+        notes: 'Site safety and civil maintenance engineering team mandatory bi-annual water rescue, drysuit buoyancy, cold water shock awareness, and bankside throwline certification.',
+        status: 'enquiry',
+        created_on: '2026-11-04 11:05'
+      }
+    ];
+
+    let currentActiveJobId = 'JOB-1040';
+    let navigationHistory = ['home'];
+
+    function goBack() {
+      if (navigationHistory.length > 1) {
+        navigationHistory.pop(); // remove current view
+        const prevView = navigationHistory[navigationHistory.length - 1];
+        switchView(prevView, currentActiveJobId, false);
+      } else {
+        switchView('home', null, false);
+      }
+    }
+
+    function switchView(viewName, jobId, pushHistory = true) {
+      if (pushHistory && (navigationHistory.length === 0 || navigationHistory[navigationHistory.length - 1] !== viewName)) {
+        navigationHistory.push(viewName);
+      }
+      if (jobId) {
+        currentActiveJobId = jobId;
+      }
+      const viewHome = document.getElementById('view-home');
+      const viewIntake = document.getElementById('view-intake');
+      const viewJobs = document.getElementById('view-jobs');
+      const viewDetail = document.getElementById('view-job-detail');
+      const viewFeasibility = document.getElementById('view-site-feasibility');
+      const viewQuote = document.getElementById('view-quote-builder');
+      const viewResources = document.getElementById('view-resources');
+      const demoBtns = document.getElementById('header-demo-buttons');
+
+      if (viewHome) viewHome.classList.add('hidden');
+      if (viewIntake) viewIntake.classList.add('hidden');
+      if (viewJobs) viewJobs.classList.add('hidden');
+      if (viewDetail) viewDetail.classList.add('hidden');
+      if (viewFeasibility) viewFeasibility.classList.add('hidden');
+      if (viewQuote) viewQuote.classList.add('hidden');
+      if (viewResources) viewResources.classList.add('hidden');
+      if (demoBtns) demoBtns.classList.add('hidden');
+
+      if (viewName === 'home') {
+        if (viewHome) viewHome.classList.remove('hidden');
+      } else if (viewName === 'jobs') {
+        if (viewJobs) viewJobs.classList.remove('hidden');
+        renderJobsTable();
+      } else if (viewName === 'intake') {
+        if (viewIntake) viewIntake.classList.remove('hidden');
+        if (demoBtns) demoBtns.classList.remove('hidden');
+      } else if (viewName === 'detail') {
+        if (viewDetail) viewDetail.classList.remove('hidden');
+        populateJobDetailScreen(currentActiveJobId);
+      } else if (viewName === 'feasibility') {
+        if (viewFeasibility) viewFeasibility.classList.remove('hidden');
+        populateFeasibilityScreen(currentActiveJobId);
+      } else if (viewName === 'quote') {
+        if (viewQuote) viewQuote.classList.remove('hidden');
+        populateQuoteScreen(currentActiveJobId);
+      } else if (viewName === 'resources') {
+        if (viewResources) viewResources.classList.remove('hidden');
+      }
+
+      if (window.lucide) { lucide.createIcons(); }
+    }
+
+        function populateJobDetailScreen(jobId) {
+      const job = jobsData.find(j => j.id === jobId) || jobsData[0];
+      if (!job) return;
+
+      const refEl = document.getElementById('detail-job-ref');
+      if (refEl) refEl.textContent = job.id;
+
+      const pillEl = document.getElementById('detail-status-pill');
+      if (pillEl) {
+        if (job.status === 'quoted') {
+          pillEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-950/80 text-emerald-300';
+          pillEl.textContent = 'Quoted';
+        } else if (job.status === 'feasibility_approved') {
+          pillEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-950/80 text-blue-300';
+          pillEl.textContent = 'Feasibility Ready';
+        } else {
+          pillEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-950/80 text-amber-300';
+          pillEl.textContent = 'Enquiry';
+        }
+      }
+
+      const docId = document.getElementById('detail-doc-id');
+      if (docId) docId.textContent = job.id;
+
+      const docDate = document.getElementById('detail-doc-date');
+      if (docDate) docDate.textContent = job.created_on ? job.created_on.split(' ')[0] : '2026-11-04';
+
+      const companyEl = document.getElementById('detail-doc-company');
+      if (companyEl) companyEl.textContent = job.company;
+
+      const contactEl = document.getElementById('detail-doc-contact');
+      if (contactEl) contactEl.textContent = job.contact;
+
+      const phoneEl = document.getElementById('detail-doc-phone');
+      if (phoneEl) phoneEl.textContent = job.phone;
+
+      const emailEl = document.getElementById('detail-doc-email');
+      if (emailEl) emailEl.textContent = job.email;
+
+      const typeEl = document.getElementById('detail-doc-type');
+      if (typeEl) {
+        typeEl.textContent = job.type.toUpperCase();
+        if (job.type === 'hire') {
+          typeEl.className = 'font-bold text-blue-400 uppercase text-xs';
+        } else if (job.type === 'sale') {
+          typeEl.className = 'font-bold text-emerald-400 uppercase text-xs';
+        } else {
+          typeEl.className = 'font-bold text-purple-400 uppercase text-xs';
+        }
+      }
+
+      const targetDateEl = document.getElementById('detail-doc-targetdate');
+      if (targetDateEl) targetDateEl.textContent = job.target_date || 'Flexible';
+
+      const supplyEl = document.getElementById('detail-doc-supply');
+      if (supplyEl) {
+        if (job.type === 'training') {
+          supplyEl.textContent = 'Service Only (Accredited Training)';
+        } else if (job.supply_type === 'supply_only') {
+          supplyEl.textContent = 'Supply Only';
+        } else {
+          supplyEl.textContent = 'Supply & Install';
+        }
+      }
+
+      const sourceEl = document.getElementById('detail-doc-source');
+      if (sourceEl) sourceEl.textContent = (job.source || 'Phone').charAt(0).toUpperCase() + (job.source || 'Phone').slice(1);
+
+      let fullLocation = job.location || '';
+      if (job.postcode && !fullLocation.includes(job.postcode)) {
+        fullLocation = fullLocation ? `${fullLocation}, ${job.postcode}` : job.postcode;
+      }
+      const locEl = document.getElementById('detail-doc-location');
+      if (locEl) locEl.textContent = fullLocation;
+
+      let specs = [];
+      if (job.type === 'training') {
+        if (job.course_name) specs.push(`Course: ${job.course_name}`);
+        if (job.delegates) specs.push(job.delegates);
+        if (job.duration) specs.push(job.duration);
+      } else {
+        if (job.approx_area) specs.push(`Area: ${job.approx_area}`);
+        if (job.duration) specs.push(`Hire: ${job.duration}`);
+        if (job.water_type) specs.push(job.water_type === 'still' ? 'Still Water' : 'Tidal Water');
+      }
+      const dimEl = document.getElementById('detail-doc-dimensions');
+      if (dimEl) dimEl.textContent = specs.join(' • ');
+
+      const notesEl = document.getElementById('detail-doc-notes');
+      if (notesEl) notesEl.textContent = job.notes || 'No specific notes recorded.';
+    }
+
+    function populateFeasibilityScreen(jobId) {
+      const job = jobsData.find(j => j.id === jobId) || jobsData[0];
+      if (!job) return;
+      document.getElementById('feasibility-job-ref').textContent = job.id;
+      let fullLoc = job.location || 'TBC';
+      if (job.postcode && !fullLoc.includes(job.postcode)) {
+        fullLoc = `${fullLoc}, ${job.postcode}`;
+      }
+      document.getElementById('feasibility-location-text').textContent = fullLoc;
+      
+      const w3wPontoon = document.getElementById('w3w-pontoon');
+      if (w3wPontoon) w3wPontoon.value = job.w3w_pontoon || '///frogs.river.nest';
+
+      const w3wAccess = document.getElementById('w3w-access');
+      if (w3wAccess) w3wAccess.value = job.w3w_access || '///gravel.lorry.entry';
+
+      const hazards = ['risk-tidal', 'risk-cables', 'risk-ground', 'risk-headroom', 'risk-crane', 'risk-frap'];
+      const jobHazards = job.hazards || (job.water_type === 'tidal' ? ['risk-tidal'] : []);
+      hazards.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.checked = jobHazards.includes(id);
+      });
+      updateRiskCount();
+    }
+
+    function openGoogleMaps() {
+      const job = jobsData.find(j => j.id === currentActiveJobId) || jobsData[0];
+      const query = job ? (job.location + ' ' + (job.postcode || '')).trim() : 'Gloucester GL1 2AB';
+      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+      window.open(url, '_blank');
+    }
+
+    function openWhat3Words() {
+      const val = (document.getElementById('w3w-pontoon')?.value || 'frogs.river.nest').replace('///', '').trim();
+      const url = `https://what3words.com/${encodeURIComponent(val)}`;
+      window.open(url, '_blank');
+    }
+
+    function updateRiskCount() {
+      const hazards = ['risk-tidal', 'risk-cables', 'risk-ground', 'risk-headroom', 'risk-crane', 'risk-frap'];
+      let count = 0;
+      hazards.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.checked) count++;
+      });
+      const badge = document.getElementById('risk-count-badge');
+      if (badge) {
+        badge.textContent = `${count} Active ${count === 1 ? 'Risk' : 'Risks'}`;
+      }
+    }
+
+        function populateQuoteScreen(jobId) {
+      const job = jobsData.find(j => j.id === jobId) || jobsData[0];
+      if (!job) return;
+      document.getElementById('quote-job-ref').textContent = job.id;
+
+      let areaVal = 48;
+      if (job.approx_area) {
+        const match = job.approx_area.match(/\d+/);
+        if (match) areaVal = parseInt(match[0], 10);
+      }
+      const lenInput = document.getElementById('quote-len');
+      const widInput = document.getElementById('quote-wid');
+      if (areaVal === 48) {
+        if (lenInput) lenInput.value = 12;
+        if (widInput) widInput.value = 4;
+      } else if (areaVal === 36) {
+        if (lenInput) lenInput.value = 9;
+        if (widInput) widInput.value = 4;
+      } else if (job.type === 'training') {
+        if (lenInput) lenInput.value = 6;
+        if (widInput) widInput.value = 2;
+      } else {
+        if (lenInput) lenInput.value = Math.round(Math.sqrt(areaVal) * 1.5);
+        if (widInput) widInput.value = Math.max(2, Math.round(areaVal / parseFloat(lenInput.value)));
+      }
+
+      if (job.duration) {
+        const dMatch = job.duration.match(/\d+/);
+        if (dMatch) {
+          const wInput = document.getElementById('quote-weeks');
+          if (wInput) wInput.value = dMatch[0];
+        }
+      }
+
+      recalcQuoteFromDims();
+    }
+
+    function recalcQuoteFromDims() {
+      const len = parseFloat(document.getElementById('quote-len')?.value || '12');
+      const wid = parseFloat(document.getElementById('quote-wid')?.value || '4');
+      const area = Math.round(len * wid);
+      const areaDisplay = document.getElementById('quote-area-display');
+      if (areaDisplay) areaDisplay.textContent = area;
+      recalcQuote(area, len, wid);
+    }
+
+    function recalcQuote(passedArea, passedLen, passedWid) {
+      const job = jobsData.find(j => j.id === currentActiveJobId) || jobsData[0];
+      const len = passedLen || parseFloat(document.getElementById('quote-len')?.value || '12');
+      const wid = passedWid || parseFloat(document.getElementById('quote-wid')?.value || '4');
+      const area = passedArea || Math.round(len * wid);
+      const weeks = parseInt(document.getElementById('quote-weeks')?.value || '4', 10);
+      const crew = parseInt(document.getElementById('quote-crew')?.value || '2', 10);
+      const crewDays = parseInt(document.getElementById('quote-crew-days')?.value || '2', 10);
+
+      const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+      if (job && job.type === 'training') {
+        const delegates = parseInt(job.delegates || '6', 10);
+        const courseDays = 2;
+        const delegateCost = delegates * courseDays * 280;
+        const certFee = 450;
+        const total = delegateCost + certFee;
+        setEl('bom-cubes', 'N/A');
+        setEl('bom-pins', 'N/A');
+        setEl('bom-handrails', 'N/A');
+        setEl('bom-anchors', 'N/A');
+        setEl('cost-fleet', '£' + certFee.toLocaleString() + ' (Cert)');
+        setEl('cost-crew', '£' + delegateCost.toLocaleString() + ' (Trainers)');
+        setEl('cost-total', '£' + total.toLocaleString() + '.00');
+        return;
+      }
+
+      if (job && job.type === 'sale') {
+        const cubes = area * 4;
+        const pins = cubes;
+        const perimeter = 2 * (len + wid);
+        const handrails = Math.ceil(perimeter / 2);
+        const anchors = Math.max(2, Math.ceil(area / 15));
+
+        setEl('bom-cubes', cubes);
+        setEl('bom-pins', pins);
+        setEl('bom-handrails', handrails);
+        setEl('bom-anchors', anchors);
+
+        const assetPurchase = (cubes * 110) + (handrails * 45) + (anchors * 220);
+        const totalCrew = crew * crewDays * 320;
+        const transport = 750;
+        const total = assetPurchase + totalCrew + transport;
+
+        setEl('cost-fleet', '£' + Math.round(assetPurchase).toLocaleString() + ' (Asset)');
+        setEl('cost-crew', '£' + Math.round(totalCrew).toLocaleString());
+        setEl('cost-total', '£' + Math.round(total).toLocaleString() + '.00');
+        return;
+      }
+
+      // Default: HIRE
+      const cubes = area * 4;
+      const pins = cubes;
+      const perimeter = 2 * (len + wid);
+      const handrails = Math.ceil(perimeter / 2);
+      const anchors = Math.max(2, Math.ceil(area / 15));
+
+      setEl('bom-cubes', cubes);
+      setEl('bom-pins', pins);
+      setEl('bom-handrails', handrails);
+      setEl('bom-anchors', anchors);
+
+      const dryHireWeekly = (cubes * 2.50) + (handrails * 8.00);
+      const totalDryHire = dryHireWeekly * weeks;
+      const totalCrew = crew * crewDays * 320;
+      const transport = 650;
+      const total = totalDryHire + totalCrew + transport;
+
+      setEl('cost-fleet', '£' + Math.round(totalDryHire).toLocaleString());
+      setEl('cost-crew', '£' + Math.round(totalCrew).toLocaleString());
+      setEl('cost-total', '£' + Math.round(total).toLocaleString() + '.00');
+    }
+
+    function saveQuote() {
+      const job = jobsData.find(j => j.id === currentActiveJobId);
+      if (job) {
+        job.status = 'quoted';
+      }
+      switchView('detail', currentActiveJobId);
+    }
+
+    function extractPostcode(address) {
+      if (!address) return 'TBC';
+      const ukPostcodeRegex = /([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})/i;
+      const match = address.match(ukPostcodeRegex);
+      return match ? match[0].toUpperCase() : 'TBC';
+    }
+
+    function renderJobsTable(filter = '') {
+      const tbody = document.getElementById('jobs-table-body');
+      const countTag = document.getElementById('table-count-tag');
+      const badgeCount = document.getElementById('jobs-badge-count');
+      if (!tbody) return;
+
+      tbody.innerHTML = '';
+      const filterLower = filter.trim().toLowerCase();
+
+      const filtered = jobsData.filter(job => {
+        if (!filterLower) return true;
+        return (
+          job.id.toLowerCase().includes(filterLower) ||
+          job.company.toLowerCase().includes(filterLower) ||
+          job.contact.toLowerCase().includes(filterLower) ||
+          job.location.toLowerCase().includes(filterLower) ||
+          (job.postcode && job.postcode.toLowerCase().includes(filterLower)) ||
+          job.type.toLowerCase().includes(filterLower)
+        );
+      });
+
+      if (countTag) countTag.textContent = `${jobsData.length} Records`;
+      if (badgeCount) badgeCount.textContent = jobsData.length;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="text-center py-8 text-zinc-500 text-xs">
+              No jobs matching search filter "${filter}"
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      filtered.forEach(job => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-zinc-800/40 transition-colors cursor-pointer group';
+        tr.onclick = (e) => {
+          if (!e.target.closest('button')) {
+            switchView('detail', job.id);
+          }
+        };
+
+        let typeBadge = '';
+        if (job.type === 'hire') {
+          typeBadge = '<span class="inline-block w-20 text-center py-0.5 rounded text-[10px] font-semibold bg-blue-950/80 text-blue-300">HIRE</span>';
+        } else if (job.type === 'sale') {
+          typeBadge = '<span class="inline-block w-20 text-center py-0.5 rounded text-[10px] font-semibold bg-emerald-950/80 text-emerald-300">SALE</span>';
+        } else {
+          typeBadge = '<span class="inline-block w-20 text-center py-0.5 rounded text-[10px] font-semibold bg-purple-950/80 text-purple-300">TRAINING</span>';
+        }
+
+        let fullLocation = job.location || '';
+        if (job.postcode && !fullLocation.includes(job.postcode)) {
+          fullLocation = fullLocation ? `${fullLocation}, ${job.postcode}` : job.postcode;
+        }
+
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-bold text-zinc-100 whitespace-nowrap">${job.id}</td>
+          <td class="py-3 px-4">
+            <div class="font-semibold text-zinc-100 group-hover:text-white transition-colors">${job.company}</div>
+            <div class="text-[11px] text-zinc-400">${job.contact}</div>
+          </td>
+          <td class="py-3 px-4 whitespace-nowrap">${typeBadge}</td>
+          <td class="py-3 px-4 font-medium text-zinc-300">${fullLocation}</td>
+          <td class="py-3 px-4 text-zinc-300 whitespace-nowrap">${job.target_date || 'Flexible'}</td>
+          <td class="py-3 px-4 whitespace-nowrap">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium ${job.status === 'quoted' ? 'bg-emerald-950/80 text-emerald-300' : (job.status === 'feasibility_approved' ? 'bg-blue-950/80 text-blue-300' : 'bg-amber-950/80 text-amber-300')}">
+              ${job.status === 'quoted' ? 'Quoted' : (job.status === 'feasibility_approved' ? 'Feasibility' : 'Enquiry')}
+            </span>
+          </td>
+          <td class="py-3 px-4 text-right whitespace-nowrap">
+            <div class="flex items-center justify-end">
+              <button 
+                onclick="switchView('detail', '${job.id}')" 
+                class="p-1.5 rounded-md pd-btn-ghost transition cursor-pointer"
+                title="View Scoping Sheet"
+                aria-label="View Job"
+              >
+                <i data-lucide="eye" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      if (window.lucide) { lucide.createIcons(); }
+    }
+
+    function filterJobsTable() {
+      const q = document.getElementById('search-jobs')?.value || '';
+      renderJobsTable(q);
+    }
+
+    function saveJobAndRedirect() {
+      const selectedType = document.querySelector('input[name="type"]:checked')?.value || 'hire';
+      const company = document.getElementById('input-company')?.value.trim() || 'New Marine Customer Ltd';
+      const contact = document.getElementById('input-name')?.value.trim() || 'Site Contact';
+      const phone = document.getElementById('input-phone')?.value.trim() || '07700 900000';
+      const email = document.getElementById('input-email')?.value.trim() || 'contact@client.co.uk';
+      const source = document.getElementById('input-source')?.value || 'phone';
+      const notes = document.getElementById('input-notes')?.value.trim() || 'No additional notes provided.';
+
+      let location = 'Southampton Docks, Hampshire, SO14 2AQ';
+      let postcode = 'SO14 2AQ';
+      let target_date = '2026-12-01';
+      let supply_type = 'supply_and_install';
+      let water_type = 'still';
+      let approx_area = '30 m²';
+      let duration = '2 Weeks';
+      let delegates = null;
+      let course_name = null;
+
+      if (selectedType === 'hire') {
+        const rawLoc = document.getElementById('input-location')?.value.trim();
+        if (rawLoc) {
+          location = rawLoc;
+          postcode = extractPostcode(rawLoc);
+        }
+        target_date = document.getElementById('input-date')?.value || '2026-12-01';
+        const durVal = document.getElementById('input-duration-val')?.value || '2';
+        const durUnit = document.getElementById('input-duration-unit')?.value || 'Weeks';
+        duration = `${durVal} ${durUnit}`;
+        water_type = document.getElementById('water-tidal')?.checked ? 'tidal' : 'still';
+        approx_area = (document.getElementById('input-size')?.value || '30') + ' m²';
+        supply_type = 'supply_and_install';
+      } else if (selectedType === 'sale') {
+        const rawLoc = document.getElementById('input-sale-location')?.value.trim();
+        if (rawLoc) {
+          location = rawLoc;
+          postcode = extractPostcode(rawLoc);
+        }
+        target_date = document.getElementById('input-sale-date')?.value || '2026-12-15';
+        supply_type = document.getElementById('install-yes')?.checked ? 'supply_and_install' : 'supply_only';
+        if (supply_type === 'supply_and_install') {
+          water_type = document.getElementById('water-sale-tidal')?.checked ? 'tidal' : 'still';
+        } else {
+          water_type = null;
+        }
+        approx_area = (document.getElementById('input-sale-size')?.value || '36') + ' m²';
+      } else if (selectedType === 'training') {
+        const rawLoc = document.getElementById('input-training-location')?.value.trim();
+        if (rawLoc) {
+          location = rawLoc;
+          postcode = extractPostcode(rawLoc);
+        }
+        target_date = document.getElementById('input-training-date')?.value || '2026-12-10';
+        supply_type = 'service_only';
+        water_type = null;
+        const delVal = document.getElementById('input-delegates')?.value || '4';
+        delegates = `${delVal} Delegates`;
+        const courseSelect = document.getElementById('input-course');
+        course_name = courseSelect?.options[courseSelect.selectedIndex]?.text || 'Water Safety & Rescue';
+      }
+
+      // Generate next Job Ref
+      const nextNum = 1040 + jobsData.length;
+      const newJobId = `JOB-${nextNum}`;
+
+      const newJob = {
+        id: newJobId,
+        company,
+        contact,
+        phone,
+        email,
+        source,
+        type: selectedType,
+        supply_type,
+        location,
+        postcode,
+        target_date,
+        water_type,
+        approx_area,
+        duration,
+        delegates,
+        course_name,
+        notes,
+        status: 'enquiry',
+        created_on: new Date().toISOString().slice(0, 16).replace('T', ' ')
+      };
+
+      // Append to jobs data list (at the top)
+      jobsData.unshift(newJob);
+
+      // Navigate directly to the newly created Job Card screen
+      switchView('detail', newJobId);
+    }
+
+    function openPdfModal(jobId) {
+      const job = jobsData.find(j => j.id === jobId) || jobsData[0];
+      if (!job) return;
+
+      document.getElementById('pdf-modal-ref').textContent = job.id;
+      document.getElementById('pdf-doc-id').textContent = job.id;
+      document.getElementById('pdf-doc-date').textContent = job.created_on ? job.created_on.split(' ')[0] : '2026-11-04';
+      document.getElementById('pdf-doc-company').textContent = job.company;
+      document.getElementById('pdf-doc-contact').textContent = job.contact;
+      document.getElementById('pdf-doc-phone').textContent = job.phone;
+      document.getElementById('pdf-doc-email').textContent = job.email;
+      document.getElementById('pdf-doc-type').textContent = job.type.toUpperCase();
+      document.getElementById('pdf-doc-targetdate').textContent = job.target_date || 'Flexible';
+      document.getElementById('pdf-doc-source').textContent = job.source;
+
+      let supplyTxt = 'Supply & Install';
+      if (job.supply_type === 'supply_only') supplyTxt = 'Supply Only';
+      if (job.supply_type === 'service_only') supplyTxt = 'Service Only';
+      document.getElementById('pdf-doc-supply').textContent = supplyTxt;
+
+      let fullLoc = job.location || '';
+      if (job.postcode && !fullLoc.includes(job.postcode)) {
+        fullLoc = fullLoc ? `${fullLoc}, ${job.postcode}` : job.postcode;
+      }
+      document.getElementById('pdf-doc-location').textContent = fullLoc;
+
+      // Clean specs summary line
+      let specs = [];
+      if (job.approx_area) specs.push(`Area: ${job.approx_area}`);
+      if (job.duration) specs.push(job.duration);
+      if (job.water_type) specs.push(job.water_type === 'still' ? 'Still Water' : 'Tidal');
+      if (job.delegates) specs.push(job.delegates);
+      if (job.course_name) specs.push(job.course_name);
+
+      const specsRow = document.getElementById('pdf-doc-specs-row');
+      if (specs.length > 0) {
+        specsRow.classList.remove('hidden');
+        document.getElementById('pdf-doc-dimensions').textContent = specs.join(' • ');
+      } else {
+        specsRow.classList.add('hidden');
+      }
+
+      document.getElementById('pdf-doc-notes').textContent = job.notes || 'No specific notes recorded.';
+
+      document.getElementById('modal-pdf-sheet').classList.remove('hidden');
+    }
+
+    function closePdfModal() {
+      document.getElementById('modal-pdf-sheet').classList.add('hidden');
+    }
+
+    function printPdfModal() {
+      window.print();
+    }
+
+    function toggleSchemaPanel() {
+      const panel = document.getElementById('schemaPanel');
+      const btnText = document.getElementById('schemaBtnText');
+      const isHidden = panel.classList.contains('hidden');
+
+      if (isHidden) {
+        panel.classList.remove('hidden');
+        btnText.textContent = 'Hide Database Schema';
+        sessionStorage.setItem('pd_schema_open', 'true');
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = 'Show Database Schema';
+        sessionStorage.setItem('pd_schema_open', 'false');
+      }
+    }
+
+    if (sessionStorage.getItem('pd_schema_open') === 'true') {
+      toggleSchemaPanel();
+    }
+
+    // Initialize Jobs Table
+    renderJobsTable();
+
+    // Render all Lucide icons
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  </script>
+
+  <!-- ROBUST AUTO-REFRESH SCRIPT (WORKS ON BOTH HTTP:// AND FILE:///) -->
+  <script>
+    (function initAutoRefresh() {
+      const isFileProtocol = window.location.protocol === 'file:';
+      const cleanUrl = window.location.pathname ? window.location.href.split('?')[0].split('#')[0] : window.location.href;
+      let initialLen = null;
+
+      function checkUpdates() {
+        try {
+          const xhr = new XMLHttpRequest();
+          // For file://, query strings break local file lookup. For http://, query strings prevent caching.
+          const reqUrl = isFileProtocol ? cleanUrl : cleanUrl + '?_t=' + Date.now();
+          xhr.open('GET', reqUrl, true);
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+              if (xhr.status === 200 || xhr.status === 0) {
+                const text = xhr.responseText || '';
+                const len = text.length;
+                if (initialLen === null) {
+                  if (len > 0) initialLen = len;
+                } else if (len > 0 && Math.abs(len - initialLen) > 5) {
+                  window.location.reload();
+                }
+              }
+            }
+          };
+          xhr.send();
+        } catch(e) {}
+      }
+
+      setInterval(checkUpdates, 1000);
+    })();
+  </script>
+
+</body>
+</html>
